@@ -3,21 +3,22 @@ import java.util.Scanner;
 
 public class Main {
     static ArrayList<Customer> Tickets = new ArrayList<>();
-    public static void main(String[] args){
-        Scanner userInput = new Scanner (System.in);
+
+    public static void main(String[] args) {
+        Scanner userInput = new Scanner(System.in);
         int option = 0;
-        while (option != 4){
-          option = mainMenu(userInput);
+        while (option != 4) {
+            option = mainMenu(userInput);
         }
     }
 
-    public static int mainMenu(Scanner userInput){
+    public static int mainMenu(Scanner userInput) {
         System.out.println("######### MAIN MENU #########");
         System.out.println("1.Customer \n2.Admin \n3.Support Staff \n4.Exit");
         System.out.println("#############################");
         int option = userInput.nextInt();
 
-        if (option == 1){
+        if (option == 1) {
             System.out.println("Welcome to Customer menu! \nCreate a ticket");
             System.out.println("Enter complaint ID: ");
             int compID = userInput.nextInt();
@@ -26,10 +27,10 @@ public class Main {
             String compDes = userInput.nextLine();
             System.out.println("Enter complaint Priority. \n1.LOW 2.MEDIUM 3.HIGH ");
             int compPri = userInput.nextInt();
-            if (compPri > 3 || compPri < 0){
-
+            if (compPri > 3 || compPri < 0) {
+                compPri = 2;
             }
-            Tickets.add(new Customer(compID,compDes,compPri-1));
+            Tickets.add(new Customer(compID, compDes, compPri - 1));
             System.out.println("Ticket Created Successfully!");
 
             userInput.nextLine();
@@ -42,17 +43,18 @@ public class Main {
                     System.out.println("Description: " + adminTicketId.getComplaintDescription());
                     System.out.println("Priority: " + adminTicketId.getComplaintPriority());
                 }
-
-        }}else if (option == 2){
+            }
+        } else if (option == 2) {
             // admin menu
-        }else if (option == 3){
+        } else if (option == 3) {
             //support staff menu
         } else if (option == 4) {
             System.out.println("Exiting the application. Goodbye!");
             System.exit(0);
-        }else {
+        } else {
             System.out.println("Invalid option! please choose a valid option");
-        }return(0);
+        }
+        return (0);
     }
 
 }
