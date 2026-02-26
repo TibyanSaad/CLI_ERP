@@ -21,7 +21,6 @@ public class CustomerMenu {
         System.out.println("Enter complaint description: ");
         String compDes = userInput.nextLine();
         // fix this block for invalid input
-
         String comPri;
         while (true) {
             System.out.println("Enter complaint Priority. \n1.LOW 2.MEDIUM (default) 3.HIGH ");
