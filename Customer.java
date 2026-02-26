@@ -1,13 +1,12 @@
 public class Customer {
     int complaintId;
     String complaintDescription;
-    String[] complaintPriority = {"LOW", "MEDIUM", "HIGH"};
-    String cPriorityIndex;
+    String complaintPriority;
 
-    public Customer(int complaintId, String complaintDescription, int index) {
+    public Customer(int complaintId, String complaintDescription, String complaintPriority) {
         this.complaintId = complaintId;
         this.complaintDescription = complaintDescription;
-        this.cPriorityIndex = complaintPriority[index];
+        this.complaintPriority = complaintPriority;
     }
 
     public int getComplaintId() {
@@ -19,7 +18,7 @@ public class Customer {
     }
 
     public String getComplaintPriority() {
-        return cPriorityIndex;
+        return complaintPriority;
     }
 
 }
