@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class CustomerMenu {
     static ArrayList<Complaints> Tickets = new ArrayList<>();
-    public static void main (String[] args){
+    public static void main (){
         Scanner userInput = new Scanner(System.in);
         System.out.println("Welcome to Customer menu! \nCreate a ticket");
         int compID;
@@ -59,16 +59,6 @@ public class CustomerMenu {
         Tickets.add(new Complaints(compID,compDes,comPri));
         System.out.println("Ticket Created Successfully!");
 
-        System.out.println("Ticket number to be viewed: ");
-        int adminCompID = Integer.parseInt(userInput.nextLine());
-
-        for (Complaints adminTicketId : Tickets) {
-            if (adminTicketId.getComplaintId() == adminCompID) {
-                System.out.println("Ticket Number: " + adminTicketId.getComplaintId());
-                System.out.println("Description: " + adminTicketId.getComplaintDescription());
-                System.out.println("Priority: " + adminTicketId.getComplaintPriority());
-            }
-        }
     }
 }
 
