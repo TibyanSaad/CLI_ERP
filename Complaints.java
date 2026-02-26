@@ -1,9 +1,9 @@
-public class Customer {
+public class Complaints {
     int complaintId;
     String complaintDescription;
     String complaintPriority;
 
-    public Customer(int complaintId, String complaintDescription, String complaintPriority) {
+    public Complaints(int complaintId, String complaintDescription, String complaintPriority) {
         this.complaintId = complaintId;
         this.complaintDescription = complaintDescription;
         this.complaintPriority = complaintPriority;
