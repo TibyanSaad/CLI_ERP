@@ -26,17 +26,20 @@ public class CustomerMenu {
         while (true) {
             System.out.println("Enter complaint Priority. \n1.LOW 2.MEDIUM (default) 3.HIGH ");
             String priority = userInput.nextLine();
+
+
             if (priority.isEmpty()) {
                 comPri = "MEDIUM";
                 break;
             }
+            int comPriIndex;
 
-            if (!priority.matches("\\d+")) {
-                System.out.println("Invalid input. Please enter a number (1, 2, or 3).");
-                continue; // ask again
+            try {
+                comPriIndex = Integer.parseInt(priority);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid complaint priority number.");
+                continue;
             }
-
-            int comPriIndex = Integer.parseInt(priority);
 
             if (comPriIndex == 1) {
                 comPri = "LOW";
