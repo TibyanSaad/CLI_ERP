@@ -21,6 +21,7 @@ public class AdminMenu {
                         System.out.println("Complaint ID: " + compTickets.getComplaintId());
                         System.out.println("Complaint Description: " + compTickets.getComplaintDescription());
                         System.out.println("Complaint Priority: " + compTickets.getComplaintPriority());
+                        System.out.println("Complaint Status: " + compTickets.getComplaintStatus());
                         System.out.println("-----------------------------");
                     }
                 } else if (adminOption == 2) {
@@ -33,13 +34,41 @@ public class AdminMenu {
                                 System.out.println("Complaint ID: " + adminTicketId.getComplaintId());
                                 System.out.println("Complaint Description: " + adminTicketId.getComplaintDescription());
                                 System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
+                                System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
+                            }else {
+                                System.out.println("Complaint ticket not found");
                             }
                         }
-                    } else {
-                        System.out.println("Please search using a valid complaint ID.");
+                    }else {
+                        System.out.println("Please type a valid complaint ID");
+                        userInput.next();
                     }
 
                 } else if (adminOption == 3) {
+                    System.out.println("---- Close a Complaint Ticket----");
+                    System.out.println("Enter the complaint ID of ticket to be closed: ");
+                    if (userInput.hasNextInt()) {
+                        int adminCompID = userInput.nextInt();
+                        for (Complaints adminTicketId : CustomerMenu.Tickets) {
+                            if (adminCompID == adminTicketId.getComplaintId()) {
+                                if(!adminTicketId.getComplaintStatus().equals("CLOSED")){
+                                    System.out.println("Complaint ID: " + adminTicketId.getComplaintId());
+                                    System.out.println("Complaint Description: " + adminTicketId.getComplaintDescription());
+                                    System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
+                                    adminTicketId.setComplaintStatus("CLOSED");
+                                    System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
+                                }else{
+                                    System.out.println("Complaint ticket already closed.");
+                                }
+
+                            }else {
+                                System.out.println("Complaint ticket not found");
+                            }
+                        }
+                    }else {
+                        System.out.println("Please type a valid complaint ID");
+                        userInput.next();
+                    }
 
                 }
             }else {

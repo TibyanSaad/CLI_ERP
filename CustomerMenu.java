@@ -56,7 +56,7 @@ public class CustomerMenu {
 
         // fix this block for invalid input
 
-        Tickets.add(new Complaints(compID,compDes,comPri));
+        Tickets.add(new Complaints(compID,compDes,comPri,"OPEN"));
         System.out.println("Ticket Created Successfully!");
 
     }
