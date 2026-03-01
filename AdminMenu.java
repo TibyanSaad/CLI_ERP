@@ -127,6 +127,8 @@ public class AdminMenu {
                         System.out.printf("No complaints assigned to %s.", cStaffAssigned);
                     }
 
+                }else {
+                    System.out.println("Choose a valid option");
                 }
             } else {
                 System.out.printf("Wrong password, attempt %d%n", tries);

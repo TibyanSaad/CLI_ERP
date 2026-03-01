@@ -16,8 +16,7 @@ public class Main {
                 } else if (option == 2) {
                     AdminMenu.main();
                 } else if (option == 3) {
-                    //support staff menu
-                    System.out.println("Welcome to Staff Support menu!");
+                   SupportStaffMenu.main();
                 } else if (option == 4) {
                     System.out.println("Exiting the application. Goodbye!");
                     running = false;
