@@ -20,7 +20,6 @@ public class CustomerMenu {
         userInput.nextLine();
         System.out.println("Enter complaint description: ");
         String compDes = userInput.nextLine();
-        // fix this block for invalid input
         String comPri;
         while (true) {
             System.out.println("Enter complaint Priority. \n1.LOW 2.MEDIUM (default) 3.HIGH ");
@@ -53,9 +52,6 @@ public class CustomerMenu {
                 System.out.println("Please select a valid priority number 1-3.");
             }
         }
-
-        // fix this block for invalid input
-
         Tickets.add(new Complaints(compID,compDes,comPri,"OPEN", "None"));
         System.out.println("Ticket Created Successfully!");
 
