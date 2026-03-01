@@ -1,13 +1,13 @@
 import java.util.Scanner;
 
 public class AdminMenu {
-    public static void main (){
+    public static void main() {
         Scanner userInput = new Scanner(System.in);
         int tries = 1;
-        while (tries <= 3){
+        while (tries <= 3) {
             System.out.println(" \nPlease enter password: ");
             int password = userInput.nextInt();
-            if (password == 1234){
+            if (password == 1234) {
                 System.out.println("Password is correct!");
                 System.out.println("##### Welcome to Admin menu #####");
                 System.out.println("1.View all complaints");
@@ -16,9 +16,9 @@ public class AdminMenu {
                 System.out.println("4.Assign a complaint");
                 System.out.println("5.View a staff member's complaints");
                 int adminOption = userInput.nextInt();
-                if (adminOption == 1){
+                if (adminOption == 1) {
                     System.out.println("---- All Complaint Tickets ----");
-                    for (Complaints compTickets : CustomerMenu.Tickets){
+                    for (Complaints compTickets : CustomerMenu.Tickets) {
                         System.out.println("Complaint ID: " + compTickets.getComplaintId());
                         System.out.println("Complaint Description: " + compTickets.getComplaintDescription());
                         System.out.println("Complaint Priority: " + compTickets.getComplaintPriority());
@@ -29,6 +29,7 @@ public class AdminMenu {
                 } else if (adminOption == 2) {
                     System.out.println("---- Complaint Tickets by ID ----");
                     System.out.println("Enter the complaint ID of ticket to be viewed: ");
+                    boolean found = false;
                     if (userInput.hasNextInt()) {
                         int adminCompID = userInput.nextInt();
                         for (Complaints adminTicketId : CustomerMenu.Tickets) {
@@ -38,74 +39,81 @@ public class AdminMenu {
                                 System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
                                 System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
                                 System.out.println("Assigned staff member: " + adminTicketId.getAssignedStaff());
-                            }else {
-                                System.out.println("Complaint ticket not found");
+                                found = true;
                             }
                         }
-                    }else {
+                        if (!found) {
+                            System.out.println("Complaint ticket does not exist");
+                        }
+                    } else {
                         System.out.println("Please type a valid complaint ID");
                         userInput.next();
                     }
-
                 } else if (adminOption == 3) {
                     System.out.println("---- Close a Complaint Ticket----");
                     System.out.println("Enter the complaint ID of ticket to be closed: ");
+                    boolean found = false;
                     if (userInput.hasNextInt()) {
                         int adminCompID = userInput.nextInt();
                         for (Complaints adminTicketId : CustomerMenu.Tickets) {
                             if (adminCompID == adminTicketId.getComplaintId()) {
-                                if(!adminTicketId.getComplaintStatus().equals("CLOSED")){
+                                found = true;
+                                if (!adminTicketId.getComplaintStatus().equals("CLOSED")) {
                                     System.out.println("Complaint ID: " + adminTicketId.getComplaintId());
                                     System.out.println("Complaint Description: " + adminTicketId.getComplaintDescription());
                                     System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
                                     adminTicketId.setComplaintStatus("CLOSED");
                                     System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
                                     System.out.println("Assigned staff member: " + adminTicketId.getAssignedStaff());
-                                }else{
+                                } else {
                                     System.out.println("Complaint ticket already closed.");
                                 }
-
-                            }else {
-                                System.out.println("Complaint ticket not found");
                             }
+                        }
+                        if (!found) {
+                            System.out.println("Complaint ticket does not exist");
+                        }
+                    } else {
+                        System.out.println("Please type a valid complaint ID");
+                        userInput.next();
+                    }
+                } else if (adminOption == 4) {
+                    System.out.println("---- Assign Complaint Tickets ----");
+                    System.out.println("Enter the complaint ID: ");
+                    if (userInput.hasNextInt()) {
+                        int cStaffID = userInput.nextInt();
+                        userInput.nextLine();
+                        boolean found = false;
+                        for (Complaints adminTicketId : CustomerMenu.Tickets) {
+                            if (cStaffID == adminTicketId.getComplaintId()) {
+                                found = true;
+                                if(!adminTicketId.getComplaintStatus().equals("CLOSED")){
+                                    System.out.println("Complaint ID: " + adminTicketId.getComplaintId());
+                                    System.out.println("Complaint Description: " + adminTicketId.getComplaintDescription());
+                                    System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
+                                    System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
+                                    System.out.println("Enter the name of the staff member to be assigned: ");
+                                    String cStaffName = userInput.nextLine();
+                                    adminTicketId.setAssignStaff(cStaffName);
+                                    System.out.println("Complaint ticket successfully assigned to " + adminTicketId.getAssignedStaff());
+                                }else {
+                                    System.out.println("Complaint ticket already closed, cannot assign");
+                                }
+                            }
+                        } if (!found){
+                            System.out.println("Complaint ticket does not exist");
                         }
                     }else {
                         System.out.println("Please type a valid complaint ID");
                         userInput.next();
                     }
-
-                }else if (adminOption == 4) {
-                    System.out.println("---- Assign Complaint Tickets ----");
-                    System.out.println("Enter the complaint ID: ");
-                    int cStaffID = userInput.nextInt();
-                    userInput.nextLine();
-
-                    for (Complaints adminTicketId : CustomerMenu.Tickets) {
-                        if (cStaffID == adminTicketId.getComplaintId()) {
-                            if(!adminTicketId.getComplaintStatus().equals("CLOSED")){
-                                System.out.println("Complaint ID: " + adminTicketId.getComplaintId());
-                                System.out.println("Complaint Description: " + adminTicketId.getComplaintDescription());
-                                System.out.println("Complaint Priority: " + adminTicketId.getComplaintPriority());
-                                System.out.println("Complaint Status: " + adminTicketId.getComplaintStatus());
-                                System.out.println("Enter the name of the staff member to be assigned: ");
-                                String cStaffName = userInput.nextLine();
-                                adminTicketId.setAssignStaff(cStaffName);
-                                System.out.println("Assigned staff member: " + adminTicketId.getAssignedStaff());
-                            }else{
-                                System.out.println("Complaint ticket already closed, cannot assign");
-                            }
-
-                        }else {
-                            System.out.println("Complaint ticket not found");
-                        }
-                    }
-
-            }  else if (adminOption == 5) {
+                }else if (adminOption == 5) {
                     System.out.println("---- Staff Member Assigned Complaint Tickets ----");
                     System.out.println("Enter the staff member's name: ");
                     String cStaffAssigned = userInput.next();
-                    System.out.printf("%s Assigned complaint tickets%n", cStaffAssigned);
+                    System.out.printf("Complaint tickets assigned to %s %n", cStaffAssigned);
                     System.out.println("-------------------------------------------------");
+                    boolean found = false;
                     for (Complaints staffComplaints : CustomerMenu.Tickets){
                         if (cStaffAssigned.equals(staffComplaints.getAssignedStaff())){
                             System.out.println("Complaint ID: " + staffComplaints.getComplaintId());
@@ -113,16 +121,17 @@ public class AdminMenu {
                             System.out.println("Complaint Priority: " + staffComplaints.getComplaintPriority());
                             System.out.println("Complaint Status: " + staffComplaints.getComplaintStatus());
                             System.out.println("-------------------------------------------------");
-                        }else {
-                            System.out.println("No complaints assigned.");
+                            found = true;
                         }
+                    }if (!found) {
+                        System.out.printf("No complaints assigned to %s.", cStaffAssigned);
                     }
 
-                }else {
-                System.out.printf("Wrong password, attempt %d%n",tries);
-                tries ++;
+                }
+            } else {
+                System.out.printf("Wrong password, attempt %d%n", tries);
+                tries++;
             }
         }
     }
-}
 }

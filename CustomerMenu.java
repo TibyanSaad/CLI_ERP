@@ -3,8 +3,9 @@ import java.util.Scanner;
 
 public class CustomerMenu {
     static ArrayList<Complaints> Tickets = new ArrayList<>();
-    public static void main (){
-        Scanner userInput = new Scanner(System.in);
+    static Scanner userInput = new Scanner(System.in);
+
+    public static void main() {
         System.out.println("Welcome to Customer menu! \nCreate a ticket");
         int compID;
         while (true) {
@@ -24,8 +25,6 @@ public class CustomerMenu {
         while (true) {
             System.out.println("Enter complaint Priority. \n1.LOW 2.MEDIUM (default) 3.HIGH ");
             String priority = userInput.nextLine();
-
-
             if (priority.isEmpty()) {
                 comPri = "MEDIUM";
                 break;
@@ -52,9 +51,8 @@ public class CustomerMenu {
                 System.out.println("Please select a valid priority number 1-3.");
             }
         }
-        Tickets.add(new Complaints(compID,compDes,comPri,"OPEN", "None"));
+        Tickets.add(new Complaints(compID, compDes, comPri, "OPEN", "NONE"));
         System.out.println("Ticket Created Successfully!");
-
     }
-}
 
+}

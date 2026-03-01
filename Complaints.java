@@ -1,11 +1,10 @@
-import java.util.HashMap;
-
 public class Complaints {
     int complaintId;
     String complaintDescription;
     String complaintPriority;
     String complaintStatus;
     String assignedStaff;
+
 
     public Complaints(int complaintId, String complaintDescription, String complaintPriority, String complaintStatus, String assignedStaff) {
         this.complaintId = complaintId;
@@ -35,7 +34,6 @@ public class Complaints {
         return assignedStaff;
     }
 
-
     public void setComplaintStatus(String complaintStatus){
         this.complaintStatus = complaintStatus;
     }
@@ -43,4 +41,5 @@ public class Complaints {
     public void setAssignStaff(String assignedStaff) {
         this.assignedStaff=assignedStaff;
     }
+
 }
