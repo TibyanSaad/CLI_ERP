@@ -36,12 +36,18 @@ public class Complaints {
         return assignedStaff;
     }
 
+    public String getStaffComments(){return staffComments;}
+
     public void setComplaintStatus(String complaintStatus){
         this.complaintStatus = complaintStatus;
     }
 
     public void setAssignStaff(String assignedStaff) {
         this.assignedStaff = assignedStaff;
+    }
+
+    public void setStaffComments(String staffComments){
+        this.staffComments = staffComments;
     }
 
 }
