@@ -6,9 +6,8 @@ public class SupportStaffMenu {
         System.out.println("##### Welcome to Support Staff menu #####");
         System.out.println("Enter your name: ");
         String staffName = userInput.nextLine();
-        boolean running = true;
 
-        while (running){
+        while (true){
             System.out.printf("##### Welcome %s #####%n", staffName);
             System.out.println("1.View assigned complaints");
             System.out.println("2.Add a comment to a complaint");
@@ -103,7 +102,7 @@ public class SupportStaffMenu {
                     }
 
                 } else if (staffChoice == 4) {
-                    running = false;
+                    Main.mainMenu();
                 } else {
                     System.out.println("Choose an option between 1-4.");
                 }

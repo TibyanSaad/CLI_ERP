@@ -23,7 +23,7 @@ public class Main {
                     SupportStaffMenu.main();
                 } else if (option == 4) {
                     System.out.println("Exiting the application. Goodbye!");
-                    running = false;
+                    System.exit(0);
                 } else {
                     System.out.println("Please choose a number between 1-4");
                 }
