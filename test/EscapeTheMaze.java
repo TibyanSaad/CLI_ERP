@@ -19,17 +19,11 @@ public class EscapeTheMaze {
         if (onlyOneSymbol(mazeArray2D) && allBordersOnes(mazeArray2D)){
             int startRow = 0;
             int startColumn = 0;
-            int endRow = 0;
-            int endColumn = 0;
             for (int row = 0; row<10;row++ ){
                 for(int column = 0 ; column<10; column++){
                     if (mazeArray2D[row][column] == '@') {
                         startRow = row;
                         startColumn = column;
-                    }
-                    if (mazeArray2D[row][column] == 'E') {
-                        endRow = row;
-                        endColumn = column;
                     }
                 }
             }
@@ -75,7 +69,7 @@ public class EscapeTheMaze {
             mazeStack.push(new Position(r-1,c));//up
             mazeStack.push(new Position(r,c+1));//right
             mazeStack.push(new Position(r,c-1));//left
-
+            mazeArray2D[r][c] = '0';
             if (mazeArray2D[r][c] == 'E'){
                 return true;
             }
