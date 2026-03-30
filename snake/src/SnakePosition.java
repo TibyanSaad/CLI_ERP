@@ -1,3 +1,5 @@
+package snake.src;
+
 public class SnakePosition {
     int hRow, hCol;
 

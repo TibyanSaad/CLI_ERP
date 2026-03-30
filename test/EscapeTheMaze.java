@@ -7,43 +7,62 @@ import java.util.*;
 public class EscapeTheMaze {
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        Path mazeFile = Path.of("src/main/java/org/example/fromtibyan/sprint3/maze.txt");
+        Path mazeFile = Path.of("test/maze.txt");
+        try {
+            ArrayList<String> mazeArray = (ArrayList<String>) Files.readAllLines(mazeFile);
 
-        ArrayList<String> mazeArray = (ArrayList<String>) Files.readAllLines(mazeFile);
-
-        // convert to 2d array
-        char[][] mazeArray2D = new char[10][10];
-        for (int i = 0; i < mazeArray.size(); i++) {
-            mazeArray2D[i] = mazeArray.get(i).toCharArray();
-        }
-        if (onlyOneSymbol(mazeArray2D) && allBordersOnes(mazeArray2D)){
-            int startRow = 0;
-            int startColumn = 0;
-            for (int row = 0; row<10;row++ ){
-                for(int column = 0 ; column<10; column++){
-                    if (mazeArray2D[row][column] == '@') {
-                        startRow = row;
-                        startColumn = column;
+            // convert to 2d array
+            char[][] mazeArray2D = new char[10][10];
+            for (int i = 0; i < mazeArray.size(); i++) {
+                mazeArray2D[i] = mazeArray.get(i).toCharArray();
+            }
+            if (onlyOneSymbol(mazeArray2D) && allBordersOnes(mazeArray2D)){
+                int startRow = 0;
+                int startColumn = 0;
+                for (int row = 0; row<10;row++ ){
+                    for(int column = 0 ; column<10; column++){
+                        if (mazeArray2D[row][column] == '@') {
+                            startRow = row;
+                            startColumn = column;
+                        }
                     }
                 }
-            }
-            Position start = new Position(startRow,startColumn);
+                Position start = new Position(startRow,startColumn);
 
-            if (symbolMovement(mazeArray2D,start)){
-                System.out.println("Maze Solved!");
-            }else{
-                System.out.println("No path found.");
+                if (symbolMovement(mazeArray2D,start)){
+                    System.out.println("Maze Solved!");
+                }else{
+                    System.out.println("No path found.");
+                }
+
+            }else {
+                System.out.println("Border conditions are not met.");
             }
 
-        }else {
-            System.out.println("Border conditions are not met.");
+
+        } catch (IOException e) {
+            System.err.println("Error reading the maze file: " + e.getMessage()); // misreading the file
         }
+
+
+
     }
 
     public static boolean symbolMovement(char[][] mazeArray2D, Position start) throws InterruptedException {
         boolean[][] visitedCell = new boolean[10][10];
         Stack<Position> mazeStack = new Stack<>();
         mazeStack.push(start);
+
+        int endRow = 0;
+        int endColumn = 0;
+        for (int row = 0; row<10;row++ ){
+            for(int column = 0 ; column<10; column++){
+                if (mazeArray2D[row][column] == 'E') {
+                    endRow = row;
+                    endColumn = column;
+                }
+            }
+        }
 
         while (!mazeStack.empty()){
             Position current = mazeStack.pop();
@@ -60,17 +79,17 @@ public class EscapeTheMaze {
             for(char[] maze: mazeArray2D){
                 System.out.println(maze);
             }
-            System.out.println( );
-            System.out.println( );
-            System.out.println( );
-            System.out.println( );
+
+            for (int space = 0; space<4; space ++){
+                System.out.println( );
+            }
 
             mazeStack.push(new Position(r+1,c));//down
             mazeStack.push(new Position(r-1,c));//up
             mazeStack.push(new Position(r,c+1));//right
             mazeStack.push(new Position(r,c-1));//left
             mazeArray2D[r][c] = '0';
-            if (mazeArray2D[r][c] == 'E'){
+            if (r == endRow && c == endColumn){
                 return true;
             }
             Thread.sleep(1000);
@@ -102,7 +121,7 @@ public class EscapeTheMaze {
                 }
             }
         }
-        return true;
+        return atCounter == 1 && eCounter == 1;
     }
 
     public static boolean allBordersOnes(char[][] mazeArray2D){

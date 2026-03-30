@@ -1,3 +1,5 @@
+package snake.src;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -21,86 +23,70 @@ public class MoveSnake {
             System.err.println("ERROR READING FILE: " + e.getMessage()); // misreading the file
             throw new RuntimeException(e); // exception handling of toURI and reading file
         }
-            for (char[] map : mapArray2D) {
-                for (char space : map) {
-                    System.out.print(space + " ");
-                }
-                System.out.println();
+
+        for (char[] map : mapArray2D) {
+            for (char space : map) {
+                System.out.print(space + " ");
             }
+            System.out.println();
+        }
+
         ArrayList<int[]> snakeBody = new ArrayList<>();
-        snakeBody.add(new int[]{7,9});// head initial position
+        snakeBody.add(new int[]{7,9});// head initial position index 0
         snakeBody.add(new int[]{7,8});
         snakeBody.add(new int[]{7,7});
         snakeBody.add(new int[]{7,6});
         snakeBody.add(new int[]{7,5});
 
 
-        // getting head position
-        int[] headPosition = snakeBody.get(0);
-        int headRow = headPosition[0];
-        int headColumn = headPosition[1];
-
-        //getting body 1st part
-        int[] b1 = snakeBody.get(1);
-        int b1Row = b1[0];
-        int b1Column = b1[1];
-
-        //getting body 2nd part
-        int[] b2 = snakeBody.get(2);
-        int b2Row = b2[0];
-        int b2Column = b2[1];
-
-        //getting body 3rd part
-        int[] b3 = snakeBody.get(3);
-        int b3Row = b3[0];
-        int b3Column = b3[1];
-
-        // getting tail position
-        int[] tail = snakeBody.get(0);
-        int tailRow = tail[0];
-        int tailColumn = tail[1];
-
-
-
-
-
-        ArrayList<SnakePosition> snakeMovement = new ArrayList<>();
-        SnakePosition headStart = new SnakePosition(headRow, headColumn);
-        snakeMovement.add(headStart);
-        SnakePosition head = headStart;
-
+        for (int[] body : snakeBody) {
+            mapArray2D[body[0]][body[1]] = 'o'; //draw start snake
+        }
 
         // args[0] direction;
         // args[1]  steps;
         int steps = Integer.parseInt(args[1]);
 
-
         if (args[0].equalsIgnoreCase("up")){
-
             for (int move = 0; move < steps; move++) {
-                SnakePosition newHead = new SnakePosition(head.hRow - 1, head.hCol); // for each step update
+                int[] head = snakeBody.get(0);
+                SnakePosition newHead = new SnakePosition(head[0] - 1, head[1]); // for each step update
                 if (snakeNotOutside(newHead.hRow, newHead.hCol)) {
-                    snakeMovement.add(0,newHead); // add to arraylist
-                    mapArray2D[newHead.hRow][newHead.hCol] = 'o';
-                    mapArray2D[b1Row][b1Column] = 'o';
-                    mapArray2D[b2Row][b2Column] = 'o';
-                    mapArray2D[b3Row][b3Column] = 'o';
-                    mapArray2D[tailRow][tailColumn] = 'o';
+                    snakeBody.add(0, new int[]{newHead.hRow, newHead.hCol});// add new head value to arraylist
+                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
+                    mapArray2D[oldTail[0]][oldTail[1]] = '-';// remove old tail to show movement
 
-//                    SnakePosition tailend = snakeMovement.remove(snakeBody.size()-1); // remove tail
-//                    mapArray2D[tailend.hRow][tailend.hCol] = '-';
-//                    head = newHead; // new value of head
+                    for (int[] body : snakeBody) {
+                        mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
+                    }
+
                     displayMap(mapArray2D);
+                }
+            }
+        }
 
+        if (args[0].equalsIgnoreCase("down")){
+            for (int move = 0; move < steps; move++) {
+                int[] head = snakeBody.get(0);
+                SnakePosition newHead = new SnakePosition(head[0] + 1, head[1]); // for each step update
+                if (snakeNotOutside(newHead.hRow, newHead.hCol)) {
+                    snakeBody.add(0, new int[]{newHead.hRow, newHead.hCol});// add new head value to arraylist
+                    int[] tailEnd = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
+                    mapArray2D[tailEnd[0]][tailEnd[1]] = '-';// remove old tail to show movement
+
+                    for (int[] body : snakeBody) {
+                        mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
+                    }
+
+                    displayMap(mapArray2D);
                 }
             }
         }
 
 
 
-
-
     }
+
     //snake doesnt go out of map
     public static boolean snakeNotOutside(int headRow, int headColumn ){
         if (headRow >= 0 && headRow < 15 && headColumn >= 0 && headColumn < 15) {
@@ -112,6 +98,7 @@ public class MoveSnake {
         }
     }
 
+    //display map
     public static void displayMap(char[][] mapArray2D) throws InterruptedException {
         for (char[] row : mapArray2D) {
             for (char space : row) {
@@ -123,8 +110,5 @@ public class MoveSnake {
             System.out.println();
         }
         Thread.sleep(1000);
-
     }
-
-
 }
