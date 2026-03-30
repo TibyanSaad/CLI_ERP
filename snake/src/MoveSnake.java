@@ -28,14 +28,12 @@ public class MoveSnake {
                 System.out.println();
             }
         ArrayList<int[]> snakeBody = new ArrayList<>();
-        snakeBody.add(new int[]{7,9});// head position
-        snakeBody.add(new int[]{7,8});//b1
+        snakeBody.add(new int[]{7,9});// head initial position
+        snakeBody.add(new int[]{7,8});
+        snakeBody.add(new int[]{7,7});
+        snakeBody.add(new int[]{7,6});
+        snakeBody.add(new int[]{7,5});
 
-
-
-        for (int[] position : snakeBody){
-            System.out.println(Arrays.toString(position));
-        }
 
         // getting head position
         int[] headPosition = snakeBody.get(0);
@@ -47,28 +45,51 @@ public class MoveSnake {
         int b1Row = b1[0];
         int b1Column = b1[1];
 
+        //getting body 2nd part
+        int[] b2 = snakeBody.get(2);
+        int b2Row = b2[0];
+        int b2Column = b2[1];
 
-        Queue<SnakePosition> snakeMovement = new LinkedList<>();
-        SnakePosition headStart = new SnakePosition(headRow, headColumn, b1Row,b1Column);
+        //getting body 3rd part
+        int[] b3 = snakeBody.get(3);
+        int b3Row = b3[0];
+        int b3Column = b3[1];
+
+        // getting tail position
+        int[] tail = snakeBody.get(0);
+        int tailRow = tail[0];
+        int tailColumn = tail[1];
+
+
+
+
+
+        ArrayList<SnakePosition> snakeMovement = new ArrayList<>();
+        SnakePosition headStart = new SnakePosition(headRow, headColumn);
         snakeMovement.add(headStart);
         SnakePosition head = headStart;
 
 
-        // args[0] ="direction";
-        // args[1] ="steps";
-            int steps = Integer.parseInt(args[1]);
+        // args[0] direction;
+        // args[1]  steps;
+        int steps = Integer.parseInt(args[1]);
 
 
         if (args[0].equalsIgnoreCase("up")){
 
             for (int move = 0; move < steps; move++) {
-                SnakePosition newHead = new SnakePosition(head.hRow - 1, head.hCol,head.b1Row,head.b1Col); // for each step update
+                SnakePosition newHead = new SnakePosition(head.hRow - 1, head.hCol); // for each step update
                 if (snakeNotOutside(newHead.hRow, newHead.hCol)) {
-                    snakeMovement.add(newHead); // enqueue
+                    snakeMovement.add(0,newHead); // add to arraylist
                     mapArray2D[newHead.hRow][newHead.hCol] = 'o';
-                    SnakePosition tail = snakeMovement.poll(); // dequeue
-                    mapArray2D[tail.hRow][tail.hCol] = '-';
-                    head = newHead; // new value of head
+                    mapArray2D[b1Row][b1Column] = 'o';
+                    mapArray2D[b2Row][b2Column] = 'o';
+                    mapArray2D[b3Row][b3Column] = 'o';
+                    mapArray2D[tailRow][tailColumn] = 'o';
+
+//                    SnakePosition tailend = snakeMovement.remove(snakeBody.size()-1); // remove tail
+//                    mapArray2D[tailend.hRow][tailend.hCol] = '-';
+//                    head = newHead; // new value of head
                     displayMap(mapArray2D);
 
                 }
