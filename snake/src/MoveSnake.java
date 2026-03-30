@@ -32,11 +32,15 @@ public class MoveSnake {
         }
 
         ArrayList<int[]> snakeBody = new ArrayList<>();
-        snakeBody.add(new int[]{7,9});// head initial position index 0
-        snakeBody.add(new int[]{7,8});
-        snakeBody.add(new int[]{7,7});
-        snakeBody.add(new int[]{7,6});
-        snakeBody.add(new int[]{7,5});
+
+// Read snake positions from the map (o = snake part)
+        for (int i = 0; i < mapArray2D.length; i++) {
+            for (int j = mapArray2D[i].length - 1; j >= 0; j--) { // right to left
+                if (mapArray2D[i][j] == 'o') {
+                    snakeBody.add(new int[]{i, j});
+                }
+            }
+        }
 
 
         for (int[] body : snakeBody) {
@@ -49,17 +53,17 @@ public class MoveSnake {
 
         if (args[0].equalsIgnoreCase("up")){
             for (int move = 0; move < steps; move++) {
-                int[] head = snakeBody.get(0);
-                SnakePosition newHead = new SnakePosition(head[0] - 1, head[1]); // for each step update
-                if (snakeNotOutside(newHead.hRow, newHead.hCol)) {
-                    snakeBody.add(0, new int[]{newHead.hRow, newHead.hCol});// add new head value to arraylist
-                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
-                    mapArray2D[oldTail[0]][oldTail[1]] = '-';// remove old tail to show movement
-
-                    for (int[] body : snakeBody) {
-                        mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
-                    }
-
+                int[] head = snakeBody.get(0); // get current head location
+                int newRow = head[0] - 1; // move up
+                int newCol = head[1];// same column
+                if (snakeNotOutside(newRow, newCol)) {
+                    snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
+                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
+                    mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
+//                    for (int[] body : snakeBody) {
+//                        mapArray2D[body[0]][body[1]] = 'o';// update the map with all snake parts
+//                    }
+                    writeMap(snakeBody,mapArray2D);
                     displayMap(mapArray2D);
                 }
             }
@@ -67,24 +71,28 @@ public class MoveSnake {
 
         if (args[0].equalsIgnoreCase("down")){
             for (int move = 0; move < steps; move++) {
-                int[] head = snakeBody.get(0);
-                SnakePosition newHead = new SnakePosition(head[0] + 1, head[1]); // for each step update
-                if (snakeNotOutside(newHead.hRow, newHead.hCol)) {
-                    snakeBody.add(0, new int[]{newHead.hRow, newHead.hCol});// add new head value to arraylist
-                    int[] tailEnd = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
-                    mapArray2D[tailEnd[0]][tailEnd[1]] = '-';// remove old tail to show movement
+                int[] head = snakeBody.get(0); // get current head location
+                int[] beforeHead = snakeBody.get(1); // get current head location
 
-                    for (int[] body : snakeBody) {
-                        mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
+                int newRow = head[0] + 1; // move up
+                int newCol = head[1];// same column
+                if (snakeNotOutside(newRow, newCol)) {
+                    if(beforeHead[0]+1 != head[0]){
+                        snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
+                        int[] tailEnd = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
+                        mapArray2D[tailEnd[0]][tailEnd[1]] = '-';// remove old tail to show movement
+
+                        for (int[] body : snakeBody) {
+                            mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
+                        }
+                        writeMap(snakeBody,mapArray2D);
+                        displayMap(mapArray2D);
                     }
-
-                    displayMap(mapArray2D);
+                }else {
+                    System.out.println("cannot go down");
                 }
             }
         }
-
-
-
     }
 
     //snake doesnt go out of map
@@ -110,5 +118,35 @@ public class MoveSnake {
             System.out.println();
         }
         Thread.sleep(1000);
+    }
+
+    // write to map.txt
+    public static void writeMap(ArrayList<int[]> snakeBody, char[][] mapArray2D){
+        // reset map except walls
+        for (int i = 0; i < mapArray2D.length; i++) {
+            for (int j = 0; j < mapArray2D[i].length; j++) {
+                if (mapArray2D[i][j] != '#') {
+                    mapArray2D[i][j] = '-';
+                }
+            }
+        }
+
+        // update snake positions
+        for (int[] body : snakeBody) {
+            mapArray2D[body[0]][body[1]] = 'o';
+        }
+
+        // write map to file (use relative path)
+        Path snakeFile = Path.of("C:/Users/MOBPC/Desktop/New folder/CLI_ERP/snake/src/map.txt"); // change to your actual path
+        List<String> mapLines = new ArrayList<>();
+        for (char[] row : mapArray2D) {
+            mapLines.add(new String(row));
+        }
+
+        try {
+            Files.write(snakeFile, mapLines); // overwrite the file
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
