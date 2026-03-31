@@ -54,9 +54,6 @@ public class MoveSnake {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (int[] body : snakeBody) {
-            mapArray2D[body[0]][body[1]] = 'o'; //draw start snake
-        }
 
         for (int[] coord : snakeBody) {
             System.out.println(coord[0] + "," + coord[1]);
@@ -72,7 +69,7 @@ public class MoveSnake {
                 int newCol = head[1];// same column
                 if (snakeNotOutside(newRow, newCol)) {
                     snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
-                    //mapArray2D[newRow][newCol] = 'o'; // add new head for movement
+                    mapArray2D[newRow][newCol] = 'o'; // add new head for movement
                     int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
                     mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
                     displayMap(mapArray2D,snakeBody);
@@ -81,6 +78,25 @@ public class MoveSnake {
                 }
             }
         }
+
+        if (args[0].equalsIgnoreCase("down")){
+            for (int move = 0; move < steps; move++) {
+                int[] head = snakeBody.get(0);
+                int newRow = head[0] + 1; // move down
+                int newCol = head[1];
+                if (snakeNotOutside(newRow, newCol)) {
+                    snakeBody.add(0, new int[]{newRow, newCol});
+                    mapArray2D[newRow][newCol] = 'o';
+                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);
+                    mapArray2D[oldTail[0]][oldTail[1]] = '-';
+                    displayMap(mapArray2D,snakeBody);
+                    writeMap(snakeBody,mapArray2D);
+                    snakeTrackingFile(snakeBody);
+                }
+            }
+        }
+
+
 
     }
 
