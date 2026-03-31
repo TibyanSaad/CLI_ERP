@@ -58,40 +58,52 @@ public class MoveSnake {
         for (int[] coord : snakeBody) {
             System.out.println(coord[0] + "," + coord[1]);
         }
-        // args[0] direction;
-        // args[1]  steps;
+
+        // args[0] -> direction
+        // args[1] -> steps
         int steps = Integer.parseInt(args[1]);
+        int[] head = snakeBody.get(0); // get current head location
+        int headRowComparison = head[0];
+        int headColumnComparison = head[1];
+
+        int[] bodyOne = snakeBody.get(1);//
+        int afterHeadRow = bodyOne[0];
+        int afterHeadColumn = bodyOne[1];
+
 
         if (args[0].equalsIgnoreCase("up")){
             for (int move = 0; move < steps; move++) {
-                int[] head = snakeBody.get(0); // get current head location
-                int newRow = head[0] - 1; // move up
-                int newCol = head[1];// same column
-                if (snakeNotOutside(newRow, newCol)) {
-                    snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
-                    mapArray2D[newRow][newCol] = 'o'; // add new head for movement
-                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
-                    mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
-                    displayMap(mapArray2D,snakeBody);
-                    writeMap(snakeBody,mapArray2D);
-                    snakeTrackingFile(snakeBody);
+                int newHeadRow = head[0] - 1; // move up
+                int newHeadCol = head[1];// same column
+                if (invalidMovementCondition(afterHeadRow, afterHeadColumn, newHeadRow, newHeadCol, headRowComparison,headColumnComparison)){
+                    if (snakeNotOutside(newHeadRow, newHeadCol)) {
+                        snakeBody.add(0, new int[]{newHeadRow, newHeadCol});// add new head at the front of the list
+                        mapArray2D[newHeadRow][newHeadCol] = 'o'; // add new head for movement
+                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
+                        mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
+                        displayMap(mapArray2D,snakeBody);
+                        writeMap(snakeBody,mapArray2D);
+                        snakeTrackingFile(snakeBody);
+                    }
                 }
             }
         }
 
-        if (args[0].equalsIgnoreCase("down")){
+
+        else if (args[0].equalsIgnoreCase("down")){
             for (int move = 0; move < steps; move++) {
-                int[] head = snakeBody.get(0);
-                int newRow = head[0] + 1; // move down
-                int newCol = head[1];
-                if (snakeNotOutside(newRow, newCol)) {
-                    snakeBody.add(0, new int[]{newRow, newCol});
-                    mapArray2D[newRow][newCol] = 'o';
-                    int[] oldTail = snakeBody.remove(snakeBody.size() - 1);
-                    mapArray2D[oldTail[0]][oldTail[1]] = '-';
-                    displayMap(mapArray2D,snakeBody);
-                    writeMap(snakeBody,mapArray2D);
-                    snakeTrackingFile(snakeBody);
+                int newRow = head[0] + 1; // move up
+                int newCol = head[1];// same column
+                if (invalidMovementCondition(afterHeadRow, afterHeadColumn,newRow,newCol, headRowComparison,headColumnComparison)){
+                    if (snakeNotOutside(newRow, newCol)) {
+                        snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
+                        mapArray2D[newRow][newCol] = 'o'; // add new head for movement
+                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
+                        mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
+                        displayMap(mapArray2D,snakeBody);
+                        writeMap(snakeBody,mapArray2D);
+                        snakeTrackingFile(snakeBody);
+                    }
                 }
             }
         }
@@ -163,6 +175,21 @@ public class MoveSnake {
             e.printStackTrace();
         }
 
+    }
+
+    //prevent snake invalid movement(body collision & wrong direction)
+    public static Boolean invalidMovementCondition(int afterHeadRow, int afterHeadColumn, int newHeadRow, int newHeadCol, int headRowComparison, int headColumnComparison  ){
+        // compare head coordinates with body coordinates thts before head
+        if (afterHeadRow==newHeadRow && afterHeadColumn==newHeadCol){
+            if(headRowComparison<newHeadRow){
+                System.out.println("cannot go down");
+                return false;
+            }
+            if(headRowComparison>newHeadRow){
+                System.out.println("cannot go up");
+                return false;
+            }
+        }return true;
     }
 
 }
