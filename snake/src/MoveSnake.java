@@ -1,5 +1,6 @@
-package snake.src;
 
+
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -8,7 +9,7 @@ import java.util.*;
 
 public class MoveSnake {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, URISyntaxException {
         char[][] mapArray2D;
         ArrayList<String> mapArray;
         try {
@@ -24,29 +25,42 @@ public class MoveSnake {
             throw new RuntimeException(e); // exception handling of toURI and reading file
         }
 
-        for (char[] map : mapArray2D) {
-            for (char space : map) {
+        for (char[] row : mapArray2D) {
+            for (char space : row) {
                 System.out.print(space + " ");
             }
+            System.out.println();
+        }
+        for (int space =0;space<10;space++){
             System.out.println();
         }
 
         ArrayList<int[]> snakeBody = new ArrayList<>();
 
-// Read snake positions from the map (o = snake part)
-        for (int i = 0; i < mapArray2D.length; i++) {
-            for (int j = mapArray2D[i].length - 1; j >= 0; j--) { // right to left
-                if (mapArray2D[i][j] == 'o') {
-                    snakeBody.add(new int[]{i, j});
-                }
+
+        // Read snake positions from snakeCoordinates.txt
+        try {
+            List<String> coordinate = Files.readAllLines(Path.of("./snakeCoordinates.txt"));
+            for (String sCoordinate : coordinate) {
+                sCoordinate = sCoordinate.trim();
+
+                // Split by comma
+                String[] parts = sCoordinate.split(",");
+                int row = Integer.parseInt(parts[0]);
+                int col = Integer.parseInt(parts[1]);
+
+                snakeBody.add(new int[]{row, col});
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-
         for (int[] body : snakeBody) {
             mapArray2D[body[0]][body[1]] = 'o'; //draw start snake
         }
 
+        for (int[] coord : snakeBody) {
+            System.out.println(coord[0] + "," + coord[1]);
+        }
         // args[0] direction;
         // args[1]  steps;
         int steps = Integer.parseInt(args[1]);
@@ -58,41 +72,16 @@ public class MoveSnake {
                 int newCol = head[1];// same column
                 if (snakeNotOutside(newRow, newCol)) {
                     snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
+                    //mapArray2D[newRow][newCol] = 'o'; // add new head for movement
                     int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
                     mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
-//                    for (int[] body : snakeBody) {
-//                        mapArray2D[body[0]][body[1]] = 'o';// update the map with all snake parts
-//                    }
+                    displayMap(mapArray2D,snakeBody);
                     writeMap(snakeBody,mapArray2D);
-                    displayMap(mapArray2D);
+                    snakeTrackingFile(snakeBody);
                 }
             }
         }
 
-        if (args[0].equalsIgnoreCase("down")){
-            for (int move = 0; move < steps; move++) {
-                int[] head = snakeBody.get(0); // get current head location
-                int[] beforeHead = snakeBody.get(1); // get current head location
-
-                int newRow = head[0] + 1; // move up
-                int newCol = head[1];// same column
-                if (snakeNotOutside(newRow, newCol)) {
-                    if(beforeHead[0]+1 != head[0]){
-                        snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
-                        int[] tailEnd = snakeBody.remove(snakeBody.size() - 1);// remove old tail from arraylist
-                        mapArray2D[tailEnd[0]][tailEnd[1]] = '-';// remove old tail to show movement
-
-                        for (int[] body : snakeBody) {
-                            mapArray2D[body[0]][body[1]] = 'o'; // update map with snake body
-                        }
-                        writeMap(snakeBody,mapArray2D);
-                        displayMap(mapArray2D);
-                    }
-                }else {
-                    System.out.println("cannot go down");
-                }
-            }
-        }
     }
 
     //snake doesnt go out of map
@@ -107,12 +96,15 @@ public class MoveSnake {
     }
 
     //display map
-    public static void displayMap(char[][] mapArray2D) throws InterruptedException {
+    public static void displayMap(char[][] mapArray2D,ArrayList<int[]> snakeBody) throws InterruptedException {
         for (char[] row : mapArray2D) {
             for (char space : row) {
                 System.out.print(space + " ");
             }
             System.out.println();
+        }
+        for (int[] coord : snakeBody) {
+            System.out.println(coord[0] + "," + coord[1]);
         }
         for (int space =0;space<10;space++){
             System.out.println();
@@ -121,23 +113,12 @@ public class MoveSnake {
     }
 
     // write to map.txt
-    public static void writeMap(ArrayList<int[]> snakeBody, char[][] mapArray2D){
-        // reset map except walls
-        for (int i = 0; i < mapArray2D.length; i++) {
-            for (int j = 0; j < mapArray2D[i].length; j++) {
-                if (mapArray2D[i][j] != '#') {
-                    mapArray2D[i][j] = '-';
-                }
-            }
-        }
+    public static void writeMap(ArrayList<int[]> snakeBody, char[][] mapArray2D) throws URISyntaxException {
 
-        // update snake positions
         for (int[] body : snakeBody) {
-            mapArray2D[body[0]][body[1]] = 'o';
+            mapArray2D[body[0]][body[1]] = 'o';// update snake positions
         }
-
-        // write map to file (use relative path)
-        Path snakeFile = Path.of("C:/Users/MOBPC/Desktop/New folder/CLI_ERP/snake/src/map.txt"); // change to your actual path
+        Path snakeFile = Path.of(MoveSnake.class.getResource("./map.txt").toURI());// write map to file
         List<String> mapLines = new ArrayList<>();
         for (char[] row : mapArray2D) {
             mapLines.add(new String(row));
@@ -149,4 +130,24 @@ public class MoveSnake {
             throw new RuntimeException(e);
         }
     }
+
+    // to save the state of snake every run and keep track of head location
+    public static void snakeTrackingFile(ArrayList<int[]> snakeBody){
+        try {
+            FileWriter writer = new FileWriter("./snakeCoordinates.txt");
+
+            for (int[] snakeCoord : snakeBody) {
+                // Write each coordinate pair tgt
+                writer.write(snakeCoord[0] + "," + snakeCoord[1] + "\n");
+            }
+            System.out.println();
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
+
