@@ -31,9 +31,7 @@ public class MoveSnake {
             }
             System.out.println();
         }
-        for (int space =0;space<10;space++){
-            System.out.println();
-        }
+
 
         ArrayList<int[]> snakeBody = new ArrayList<>();
 
@@ -59,24 +57,38 @@ public class MoveSnake {
             System.out.println(coord[0] + "," + coord[1]);
         }
 
+        for (int space =0;space<10;space++){
+            System.out.println();
+        }
         // args[0] -> direction
         // args[1] -> steps
-        int steps = Integer.parseInt(args[1]);
-        int[] head = snakeBody.get(0); // get current head location
+
+        int steps = 1; // if steps not mentioned then default is 1
+        if (args.length > 1) {
+            if (!args[1].isEmpty()) {
+                steps = Integer.parseInt(args[1]);
+                if (steps <= 0) {
+                    System.out.println("Steps must be a positive value");
+                }
+            }
+        }
+
+        int[] head = snakeBody.get(0); // get head location
         int headRowComparison = head[0];
         int headColumnComparison = head[1];
 
-        int[] bodyOne = snakeBody.get(1);//
+        int[] bodyOne = snakeBody.get(1);// body segment after head location
         int afterHeadRow = bodyOne[0];
         int afterHeadColumn = bodyOne[1];
 
-
+        // moving in the upper direction
         if (args[0].equalsIgnoreCase("up")){
             for (int move = 0; move < steps; move++) {
-                int newHeadRow = head[0] - 1; // move up
-                int newHeadCol = head[1];// same column
+                int[] currentHead = snakeBody.get(0);// current head location
+                int newHeadRow = currentHead[0] - 1; // move up
+                int newHeadCol = currentHead[1];// same column
                 if (invalidMovementCondition(afterHeadRow, afterHeadColumn, newHeadRow, newHeadCol, headRowComparison,headColumnComparison)){
-                    if (snakeNotOutside(newHeadRow, newHeadCol)) {
+                    if (snakeNotOutside(newHeadRow, newHeadCol, mapArray2D,snakeBody)) {
                         snakeBody.add(0, new int[]{newHeadRow, newHeadCol});// add new head at the front of the list
                         mapArray2D[newHeadRow][newHeadCol] = 'o'; // add new head for movement
                         int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
@@ -88,18 +100,18 @@ public class MoveSnake {
                 }
             }
         }
-
-
+        // moving in the downwards direction
         else if (args[0].equalsIgnoreCase("down")){
             for (int move = 0; move < steps; move++) {
-                int newRow = head[0] + 1; // move up
-                int newCol = head[1];// same column
+                int[] currentHead = snakeBody.get(0);
+                int newRow = currentHead[0] + 1; // move down
+                int newCol = currentHead[1];// same column
                 if (invalidMovementCondition(afterHeadRow, afterHeadColumn,newRow,newCol, headRowComparison,headColumnComparison)){
-                    if (snakeNotOutside(newRow, newCol)) {
-                        snakeBody.add(0, new int[]{newRow, newCol});// add new head at the front of the list
-                        mapArray2D[newRow][newCol] = 'o'; // add new head for movement
-                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);// remove old tail to keep snake length constant
-                        mapArray2D[oldTail[0]][oldTail[1]] = '-'; // remove old tail for movement
+                    if (snakeNotOutside(newRow, newCol, mapArray2D,snakeBody)) {
+                        snakeBody.add(0, new int[]{newRow, newCol});
+                        mapArray2D[newRow][newCol] = 'o';
+                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);
+                        mapArray2D[oldTail[0]][oldTail[1]] = '-';
                         displayMap(mapArray2D,snakeBody);
                         writeMap(snakeBody,mapArray2D);
                         snakeTrackingFile(snakeBody);
@@ -107,24 +119,64 @@ public class MoveSnake {
                 }
             }
         }
-
-
+        // moving in the left direction
+        else if (args[0].equalsIgnoreCase("left")){
+            for (int move = 0; move < steps; move++) {
+                int[] currentHead = snakeBody.get(0);
+                int newRow = currentHead[0]; // same row
+                int newCol = currentHead[1] - 1;// go left
+                if (invalidMovementCondition(afterHeadRow, afterHeadColumn,newRow,newCol, headRowComparison,headColumnComparison)){
+                    if (snakeNotOutside(newRow, newCol, mapArray2D,snakeBody)) {
+                        snakeBody.add(0, new int[]{newRow, newCol});
+                        mapArray2D[newRow][newCol] = 'o';
+                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);
+                        mapArray2D[oldTail[0]][oldTail[1]] = '-';
+                        displayMap(mapArray2D,snakeBody);
+                        writeMap(snakeBody,mapArray2D);
+                        snakeTrackingFile(snakeBody);
+                    }
+                }
+            }
+        }
+        // moving in the right direction
+        else if (args[0].equalsIgnoreCase("right")){
+            for (int move = 0; move < steps; move++) {
+                int[] currentHead = snakeBody.get(0);
+                int newRow = currentHead[0]; // same row
+                int newCol = currentHead[1] + 1;// go right
+                if (invalidMovementCondition(afterHeadRow, afterHeadColumn,newRow,newCol, headRowComparison,headColumnComparison)){
+                    if (snakeNotOutside(newRow, newCol, mapArray2D,snakeBody)) {
+                        snakeBody.add(0, new int[]{newRow, newCol});
+                        mapArray2D[newRow][newCol] = 'o';
+                        int[] oldTail = snakeBody.remove(snakeBody.size() - 1);
+                        mapArray2D[oldTail[0]][oldTail[1]] = '-';
+                        displayMap(mapArray2D,snakeBody);
+                        writeMap(snakeBody,mapArray2D);
+                        snakeTrackingFile(snakeBody);
+                    }
+                }
+            }
+        }
+        else {
+            System.out.println("Direction is not valid. \n Choose Up, Down, Left or Right.");
+        }
 
     }
 
     //snake doesnt go out of map
-    public static boolean snakeNotOutside(int headRow, int headColumn ){
-        if (headRow >= 0 && headRow < 15 && headColumn >= 0 && headColumn < 15) {
+    public static boolean snakeNotOutside(int newHeadRow, int newHeadColumn, char[][] mapArray2D, ArrayList<int[]> snakeBody ){
+        int maxRow = mapArray2D.length;
+        int maxCol = mapArray2D[0].length;
+
+        if (newHeadRow >= 0 && newHeadRow < maxRow && newHeadColumn >= 0 && newHeadColumn < maxCol) {
             return true;
-        }
-        else {
-            System.out.println("Snake hit the wall!");
+        } else {
             return false;
         }
     }
-
-    //display map
+        //display map
     public static void displayMap(char[][] mapArray2D,ArrayList<int[]> snakeBody) throws InterruptedException {
+
         for (char[] row : mapArray2D) {
             for (char space : row) {
                 System.out.print(space + " ");
@@ -177,19 +229,28 @@ public class MoveSnake {
 
     }
 
-    //prevent snake invalid movement(body collision & wrong direction)
-    public static Boolean invalidMovementCondition(int afterHeadRow, int afterHeadColumn, int newHeadRow, int newHeadCol, int headRowComparison, int headColumnComparison  ){
+    //prevent snake invalid movement(head collision with prev body segment)
+    public static Boolean invalidMovementCondition(int afterHeadRow, int afterHeadColumn, int newHeadRow, int newHeadCol, int headRowComparison, int headColumnComparison){
         // compare head coordinates with body coordinates thts before head
-        if (afterHeadRow==newHeadRow && afterHeadColumn==newHeadCol){
-            if(headRowComparison<newHeadRow){
-                System.out.println("cannot go down");
+        if (afterHeadRow==newHeadRow && afterHeadColumn==newHeadCol){ // if new head value = 1st body segment value
+            if(headRowComparison<newHeadRow){// down
+                System.out.println("Only valid directions are left, right and up");
                 return false;
             }
-            if(headRowComparison>newHeadRow){
-                System.out.println("cannot go up");
+            if(headRowComparison>newHeadRow){// up
+                System.out.println("Only valid directions are left, right and down");
                 return false;
             }
-        }return true;
+            if(headColumnComparison<newHeadCol){// right
+                System.out.println("Only valid directions are left, up and down");
+                return false;
+            }
+            if(headColumnComparison>newHeadCol){// left
+                System.out.println("Only valid directions are up, right and down");
+                return false;
+            }
+        }
+        return true;
     }
 
 }
